@@ -41,7 +41,7 @@ doctor_df    = load_doctors()
 
 @st.cache_resource
 def load_model():
-    return pipeline("text2text-generation", model="google/flan-t5-base")
+    return pipeline("text2text-generation", model="google/flan-t5-base", trust_remote_code=False)
 
 model = load_model()
 
