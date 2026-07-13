@@ -2,5 +2,3 @@ streamlit
 pandas
 scikit-learn
 sentencepiece
-torch==2.9.0
-transformers==4.40.0

@@ -3,7 +3,6 @@ import pandas as pd
 import json
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from transformers import pipeline
 
 # ─────────────────────────────────────────────
 # PAGE CONFIG
@@ -35,15 +34,6 @@ faq_df       = load_faq()
 symptom_df   = load_symptoms()
 doctor_df    = load_doctors()
 
-# ─────────────────────────────────────────────
-# LOAD FLAN-T5 MODEL
-# ─────────────────────────────────────────────
-
-@st.cache_resource
-def load_model():
-    return pipeline("text2text-generation", model="google/flan-t5-base", trust_remote_code=False)
-
-model = load_model()
 
 # ─────────────────────────────────────────────
 # TF-IDF SETUP
@@ -146,15 +136,6 @@ def search_faq(user_message, threshold=0.5):
     return None
 
 # ─────────────────────────────────────────────
-# FLAN-T5 FALLBACK
-# ─────────────────────────────────────────────
-
-def ask_flan_t5(user_message):
-    prompt = f"Answer this medical question clearly and simply: {user_message}"
-    result = model(prompt, max_new_tokens=200)
-    return result[0]["generated_text"]
-
-# ─────────────────────────────────────────────
 # MASTER RESPONSE FUNCTION
 # ─────────────────────────────────────────────
 
@@ -171,7 +152,8 @@ def get_response(user_message):
     if faq_answer:
         return faq_answer
 
-    return ask_flan_t5(user_message)
+    response = "I'm sorry, I don't have specific information on that. Please consult a qualified healthcare professional for medical advice."
+    return response
 
 # ─────────────────────────────────────────────
 # SIDEBAR
