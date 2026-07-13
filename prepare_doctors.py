@@ -1,0 +1,50 @@
+import pandas as pd
+
+data = [
+    {"disease": "Fungal infection", "doctor_type": "Dermatologist", "reason": "Specialist in skin, hair and nail infections"},
+    {"disease": "Allergy", "doctor_type": "Allergist", "reason": "Specialist in diagnosing and treating allergic conditions"},
+    {"disease": "GERD", "doctor_type": "Gastroenterologist", "reason": "Specialist in digestive system and stomach conditions"},
+    {"disease": "Chronic cholestasis", "doctor_type": "Hepatologist", "reason": "Specialist in liver and bile related conditions"},
+    {"disease": "Drug Reaction", "doctor_type": "Allergist", "reason": "Specialist in drug allergies and adverse reactions"},
+    {"disease": "Peptic ulcer disease", "doctor_type": "Gastroenterologist", "reason": "Specialist in stomach and intestinal conditions"},
+    {"disease": "AIDS", "doctor_type": "Infectious Disease Specialist", "reason": "Specialist in HIV and immune system conditions"},
+    {"disease": "Diabetes", "doctor_type": "Endocrinologist", "reason": "Specialist in hormone and metabolic disorders"},
+    {"disease": "Gastroenteritis", "doctor_type": "Gastroenterologist", "reason": "Specialist in digestive system infections"},
+    {"disease": "Bronchial Asthma", "doctor_type": "Pulmonologist", "reason": "Specialist in lung and respiratory conditions"},
+    {"disease": "Hypertension", "doctor_type": "Cardiologist", "reason": "Specialist in heart and blood pressure conditions"},
+    {"disease": "Migraine", "doctor_type": "Neurologist", "reason": "Specialist in brain and nervous system conditions"},
+    {"disease": "Cervical spondylosis", "doctor_type": "Orthopedist", "reason": "Specialist in spine and joint conditions"},
+    {"disease": "Paralysis (brain hemorrhage)", "doctor_type": "Neurologist", "reason": "Specialist in brain and nervous system conditions"},
+    {"disease": "Jaundice", "doctor_type": "Hepatologist", "reason": "Specialist in liver and bile related conditions"},
+    {"disease": "Malaria", "doctor_type": "Infectious Disease Specialist", "reason": "Specialist in parasitic and infectious diseases"},
+    {"disease": "Chicken pox", "doctor_type": "Dermatologist", "reason": "Specialist in viral skin infections"},
+    {"disease": "Dengue", "doctor_type": "Infectious Disease Specialist", "reason": "Specialist in viral and mosquito borne diseases"},
+    {"disease": "Typhoid", "doctor_type": "Infectious Disease Specialist", "reason": "Specialist in bacterial and infectious diseases"},
+    {"disease": "Hepatitis A", "doctor_type": "Hepatologist", "reason": "Specialist in liver infections and diseases"},
+    {"disease": "Hepatitis B", "doctor_type": "Hepatologist", "reason": "Specialist in liver infections and diseases"},
+    {"disease": "Hepatitis C", "doctor_type": "Hepatologist", "reason": "Specialist in liver infections and diseases"},
+    {"disease": "Hepatitis D", "doctor_type": "Hepatologist", "reason": "Specialist in liver infections and diseases"},
+    {"disease": "Hepatitis E", "doctor_type": "Hepatologist", "reason": "Specialist in liver infections and diseases"},
+    {"disease": "Alcoholic hepatitis", "doctor_type": "Hepatologist", "reason": "Specialist in liver conditions caused by alcohol"},
+    {"disease": "Tuberculosis", "doctor_type": "Pulmonologist", "reason": "Specialist in lung and respiratory infections"},
+    {"disease": "Common Cold", "doctor_type": "General Physician", "reason": "Manages mild respiratory infections and symptoms"},
+    {"disease": "Pneumonia", "doctor_type": "Pulmonologist", "reason": "Specialist in lung infections and respiratory conditions"},
+    {"disease": "Dimorphic hemorrhoids (piles)", "doctor_type": "Gastroenterologist", "reason": "Specialist in digestive and rectal conditions"},
+    {"disease": "Heart attack", "doctor_type": "Cardiologist", "reason": "Specialist in heart conditions and cardiac emergencies"},
+    {"disease": "Varicose veins", "doctor_type": "Vascular Surgeon", "reason": "Specialist in vein and blood vessel conditions"},
+    {"disease": "Hypothyroidism", "doctor_type": "Endocrinologist", "reason": "Specialist in thyroid and hormonal conditions"},
+    {"disease": "Hyperthyroidism", "doctor_type": "Endocrinologist", "reason": "Specialist in thyroid and hormonal conditions"},
+    {"disease": "Hypoglycemia", "doctor_type": "Endocrinologist", "reason": "Specialist in blood sugar and metabolic conditions"},
+    {"disease": "Osteoarthritis", "doctor_type": "Rheumatologist", "reason": "Specialist in joint and bone conditions"},
+    {"disease": "Arthritis", "doctor_type": "Rheumatologist", "reason": "Specialist in joint muscle and autoimmune conditions"},
+    {"disease": "(Vertigo) Paroxysmal Positional Vertigo", "doctor_type": "ENT Specialist", "reason": "Specialist in ear balance and dizziness conditions"},
+    {"disease": "Acne", "doctor_type": "Dermatologist", "reason": "Specialist in skin conditions and treatments"},
+    {"disease": "Urinary tract infection", "doctor_type": "Urologist", "reason": "Specialist in urinary system conditions"},
+    {"disease": "Psoriasis", "doctor_type": "Dermatologist", "reason": "Specialist in chronic skin conditions"},
+    {"disease": "Impetigo", "doctor_type": "Dermatologist", "reason": "Specialist in bacterial skin infections"},
+]
+
+df = pd.DataFrame(data)
+df.to_csv("data/doctor_recommendation.csv", index=False)
+print(f"✅ Done! {len(df)} doctor recommendations saved")
+print(df.head(5))

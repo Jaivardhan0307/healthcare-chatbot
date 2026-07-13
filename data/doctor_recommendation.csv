@@ -1,0 +1,42 @@
+disease,doctor_type,reason
+Fungal infection,Dermatologist,"Specialist in skin, hair and nail infections"
+Allergy,Allergist,Specialist in diagnosing and treating allergic conditions
+GERD,Gastroenterologist,Specialist in digestive system and stomach conditions
+Chronic cholestasis,Hepatologist,Specialist in liver and bile related conditions
+Drug Reaction,Allergist,Specialist in drug allergies and adverse reactions
+Peptic ulcer disease,Gastroenterologist,Specialist in stomach and intestinal conditions
+AIDS,Infectious Disease Specialist,Specialist in HIV and immune system conditions
+Diabetes,Endocrinologist,Specialist in hormone and metabolic disorders
+Gastroenteritis,Gastroenterologist,Specialist in digestive system infections
+Bronchial Asthma,Pulmonologist,Specialist in lung and respiratory conditions
+Hypertension,Cardiologist,Specialist in heart and blood pressure conditions
+Migraine,Neurologist,Specialist in brain and nervous system conditions
+Cervical spondylosis,Orthopedist,Specialist in spine and joint conditions
+Paralysis (brain hemorrhage),Neurologist,Specialist in brain and nervous system conditions
+Jaundice,Hepatologist,Specialist in liver and bile related conditions
+Malaria,Infectious Disease Specialist,Specialist in parasitic and infectious diseases
+Chicken pox,Dermatologist,Specialist in viral skin infections
+Dengue,Infectious Disease Specialist,Specialist in viral and mosquito borne diseases
+Typhoid,Infectious Disease Specialist,Specialist in bacterial and infectious diseases
+Hepatitis A,Hepatologist,Specialist in liver infections and diseases
+Hepatitis B,Hepatologist,Specialist in liver infections and diseases
+Hepatitis C,Hepatologist,Specialist in liver infections and diseases
+Hepatitis D,Hepatologist,Specialist in liver infections and diseases
+Hepatitis E,Hepatologist,Specialist in liver infections and diseases
+Alcoholic hepatitis,Hepatologist,Specialist in liver conditions caused by alcohol
+Tuberculosis,Pulmonologist,Specialist in lung and respiratory infections
+Common Cold,General Physician,Manages mild respiratory infections and symptoms
+Pneumonia,Pulmonologist,Specialist in lung infections and respiratory conditions
+Dimorphic hemorrhoids (piles),Gastroenterologist,Specialist in digestive and rectal conditions
+Heart attack,Cardiologist,Specialist in heart conditions and cardiac emergencies
+Varicose veins,Vascular Surgeon,Specialist in vein and blood vessel conditions
+Hypothyroidism,Endocrinologist,Specialist in thyroid and hormonal conditions
+Hyperthyroidism,Endocrinologist,Specialist in thyroid and hormonal conditions
+Hypoglycemia,Endocrinologist,Specialist in blood sugar and metabolic conditions
+Osteoarthritis,Rheumatologist,Specialist in joint and bone conditions
+Arthritis,Rheumatologist,Specialist in joint muscle and autoimmune conditions
+(Vertigo) Paroxysmal Positional Vertigo,ENT Specialist,Specialist in ear balance and dizziness conditions
+Acne,Dermatologist,Specialist in skin conditions and treatments
+Urinary tract infection,Urologist,Specialist in urinary system conditions
+Psoriasis,Dermatologist,Specialist in chronic skin conditions
+Impetigo,Dermatologist,Specialist in bacterial skin infections

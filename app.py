@@ -1,93 +1,102 @@
 import streamlit as st
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 from transformers import pipeline
 
-# ── MODEL SETUP ──────────────────────────────────────────────────────────────
-# Flan-T5-base is an instruction-tuned model — it actually answers questions
-# instead of just autocompleting text like GPT-Neo did.
-# @st.cache_resource tells Streamlit: load this once, reuse it every time.
-# Without this, the model would reload on every single message — very slow.
+# ── Page config ───────────────────────────────────────────────────────────────
+st.set_page_config(page_title="Healthcare Assistant", page_icon="🏥")
+
+# ── Constants ─────────────────────────────────────────────────────────────────
+DISCLAIMER = "\n\n⚠️ *This is general health information only. Always consult a qualified doctor for medical advice.*"
+SIMILARITY_THRESHOLD = 0.3
+
+# ── Load all 3 CSV files ──────────────────────────────────────────────────────
+@st.cache_data
+def load_data():
+    faq_df = pd.read_csv("data/faq.csv")
+    symptom_df = pd.read_csv("data/symptom_disease.csv")
+    doctor_df = pd.read_csv("data/doctor_recommendation.csv")
+    return faq_df, symptom_df, doctor_df
+
+# ── Load Flan-T5 model ────────────────────────────────────────────────────────
 @st.cache_resource
 def load_model():
     return pipeline("text2text-generation", model="google/flan-t5-base")
 
-chatbot = load_model()
+# ── TF-IDF search function ────────────────────────────────────────────────────
+def get_tfidf_answer(user_input, faq_df):
+    questions = faq_df["question"].tolist()
+    all_texts = questions + [user_input]
 
+    vectorizer = TfidfVectorizer()
+    tfidf_matrix = vectorizer.fit_transform(all_texts)
 
-# ── SAFETY WRAPPER ────────────────────────────────────────────────────────────
-# Instead of sending the raw question to Flan-T5, we wrap it in instructions.
-# This tells the model to behave like a careful healthcare assistant.
-def ask_flan(user_input):
-    prompt = f"""You are a safe and helpful healthcare assistant.
-Answer the following health question clearly and briefly.
-Always remind the user to consult a doctor for proper diagnosis.
+    user_vector = tfidf_matrix[-1]
+    faq_vectors = tfidf_matrix[:-1]
 
-Question: {user_input}
-Answer:"""
-    result = chatbot(prompt, max_length=200)
-    return result[0]['generated_text']
+    similarities = cosine_similarity(user_vector, faq_vectors).flatten()
+    best_index = similarities.argmax()
+    best_score = similarities[best_index]
 
-
-# ── KEYWORD RULES + FALLBACK ──────────────────────────────────────────────────
-# Rule-based layer runs first (fast, reliable for common queries).
-# If nothing matches, Flan-T5 handles it as a fallback.
-DISCLAIMER = "\n\n⚠️ *This is not medical advice. Please consult a qualified doctor.*"
-
-def healthcare_chatbot(user_input):
-    user_input_lower = user_input.lower()
-    
-    if any(word in user_input_lower for word in ["hi", "hello", "hey"]):
-        response = "Hello! 👋 I'm your Healthcare Assistant. How can I help you today?"
-    elif "symptoms" in user_input_lower:
-        response = "Symptoms of flu include fever, cough, sore throat, and body aches. Consult a doctor for a proper diagnosis."
-    elif "appointment" in user_input_lower:
-        response = "Sure! Please arrive at the clinic on time for your appointment. Let me know if you need to reschedule."
-    elif "headache" in user_input_lower:
-        response = "Headaches can be caused by stress, dehydration, or other factors. Drink water, rest, and consult a doctor if persistent."
-    elif "fever" in user_input_lower:
-        response = "Fever is commonly caused by infections like flu. Rest, hydrate, and consult a doctor if it lasts more than 3 days."
-    elif "medicine" in user_input_lower:
-        response = "Consult with a healthcare provider to get the appropriate medication for your condition."
+    if best_score >= SIMILARITY_THRESHOLD:
+        return faq_df["answer"].iloc[best_index], best_score
     else:
-        # Flan-T5 fallback for anything not in keyword rules
-        response = ask_flan(user_input)
+        return None, best_score
 
-    return response + DISCLAIMER
+# ── Flan-T5 fallback ──────────────────────────────────────────────────────────
+def ask_flan(user_input, model):
+    prompt = (
+        "You are a helpful healthcare assistant. "
+        "Answer the following health question clearly and simply. "
+        "Always remind the user to consult a doctor.\n\n"
+        f"Question: {user_input}\nAnswer:"
+    )
+    result = model(prompt, max_new_tokens=200)
+    return result[0]["generated_text"].strip()
 
+# ── Greeting check ────────────────────────────────────────────────────────────
+def is_greeting(text):
+    greetings = ["hi", "hello", "hey", "good morning", "good afternoon", "good evening"]
+    return text.strip().lower() in greetings
 
-# ── STREAMLIT UI ──────────────────────────────────────────────────────────────
-def main():
-    st.title("Healthcare Assistant Bot 🤖🏥")
-    st.caption("Ask me anything about health. I'll do my best to help.")
+# ── Main response function ────────────────────────────────────────────────────
+def get_response(user_input, faq_df, model):
+    # Layer 1: Greeting
+    if is_greeting(user_input):
+        return "Hello! 👋 I'm your healthcare assistant. Ask me about symptoms, conditions, or general health questions." + DISCLAIMER
+    
+    answer, score = get_tfidf_answer(user_input, faq_df)
+    if answer:
+        answer = answer.replace("⚠️", "").strip()
+        return answer + DISCLAIMER
 
-    # st.session_state is a dictionary that stays alive during your session.
-    # We use it to store the full chat history so messages don't disappear.
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
+    # Layer 3: Flan-T5 fallback
+    return ask_flan(user_input, model) + DISCLAIMER
 
-    # Render all previous messages from history on every rerun
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+# ── Load everything ───────────────────────────────────────────────────────────
+faq_df, symptom_df, doctor_df = load_data()
+model = load_model()
 
-    # st.chat_input stays pinned at the bottom like a real chat app
-    user_input = st.chat_input("Ask me anything about health & medicine...")
+# ── UI ────────────────────────────────────────────────────────────────────────
+st.title("🏥 Healthcare Assistant")
+st.caption("Ask me about symptoms, conditions, or general health advice.")
 
-    if user_input:
-        # Show user's message immediately
-        with st.chat_message("user"):
-            st.markdown(user_input)
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-        # Save user message to history
-        st.session_state.messages.append({"role": "user", "content": user_input})
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-        # Get bot response
-        with st.chat_message("assistant"):
-            with st.spinner("Thinking..."):
-                response = healthcare_chatbot(user_input)
-            st.markdown(response)
+if prompt := st.chat_input("Type your health question here..."):
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
 
-        # Save bot response to history
-        st.session_state.messages.append({"role": "assistant", "content": response})
+    with st.chat_message("assistant"):
+        with st.spinner("Thinking..."):
+            response = get_response(prompt, faq_df, model)
+        st.markdown(response)
 
-if __name__ == "__main__":
-    main()
+    st.session_state.messages.append({"role": "assistant", "content": response})
