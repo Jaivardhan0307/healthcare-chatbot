@@ -1,6 +1,6 @@
 streamlit
 pandas
 scikit-learn
-transformers
 sentencepiece
-torch
+transformers==4.40.0
+torch==2.2.2
