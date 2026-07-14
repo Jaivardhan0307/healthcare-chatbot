@@ -6,7 +6,7 @@ A conversational healthcare assistant built with Python and Streamlit. The bot a
 
 
 
-🔗 \*\*Live Demo:\*\* \[Click here to try it](https://your-app-url.streamlit.app)
+🔗 \*\*Live Demo:\*\* \[Click here to try it](https://healthcare-chatbot-judgsjgbckabnplzkcrwtg.streamlit.app)
 
 \*(Update this link after deployment)\*
 
